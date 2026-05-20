@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MinisocketX — Shared Terminal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css?v=19">
+</head>
+<body>
+    <div class="bg-aurora">
+        <div class="aurora-orb aurora-orb-1"></div>
+        <div class="aurora-orb aurora-orb-2"></div>
+        <div class="aurora-orb aurora-orb-3"></div>
+    </div>
+    <div class="bg-grid-landing"></div>
+
+    <div class="landing">
+        <nav class="nav-bar">
+            <a href="/" class="nav-logo"><span class="accent">minisocket</span>x</a>
+            <div class="nav-links">
+                <a href="https://github.com/minisocket" class="nav-link">GitHub</a>
+                <a href="#features" class="nav-link">Features</a>
+            </div>
+        </nav>
+
+        <div class="hero">
+            <div class="hero-badge">
+                <span class="hero-badge-dot"></span>
+                End-to-end encrypted terminal sharing
+            </div>
+            <h1><span class="gradient-text">minisocket</span>x</h1>
+            <p class="tagline">Share your terminal session with anyone, anywhere.</p>
+            <p class="subtitle">Zero-knowledge encryption. No signup. No config. Just run and share.</p>
+            <div class="hero-actions">
+                <button class="btn-primary" onclick="copyInstall()">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1v14M1 8h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                    Install MinisocketX
+                </button>
+                <a href="#how" class="btn-ghost">How it works</a>
+            </div>
+        </div>
+
+        <div class="hero-install">
+            <div class="code-block glow-border">
+                <div class="code-header">
+                    <div class="code-header-dots">
+                        <span class="ch-dot ch-red"></span>
+                        <span class="ch-dot ch-yellow"></span>
+                        <span class="ch-dot ch-green"></span>
+                    </div>
+                    <div class="code-tabs">
+                        <button class="code-tab code-tab-active" data-tab="install" onclick="switchTab(this)">Install</button>
+                        <button class="code-tab" data-tab="uninstall" onclick="switchTab(this)">Uninstall</button>
+                    </div>
+                    <button class="copy-btn" id="hero-copy" onclick="copyCode(this)">Copy</button>
+                </div>
+                <pre id="tab-install"><code>curl -fsSL https://{{DOMAIN}}/install.sh | bash</code></pre>
+                <pre id="tab-uninstall" style="display:none"><code>curl -fsSL https://{{DOMAIN}}/install.sh | bash -s -- --uninstall</code></pre>
+            </div>
+            <div class="hero-install-info">
+                <div class="hero-install-features">
+                    <span class="hi-feat"><span class="hi-check">&#x2713;</span> Auto-restart on crash</span>
+                    <span class="hi-feat"><span class="hi-check">&#x2713;</span> Starts on boot</span>
+                    <span class="hi-feat"><span class="hi-check">&#x2713;</span> Root or user mode</span>
+                </div>
+                <div class="download-links">
+                    <a href="/dl/minisocketx-linux-amd64" class="dl-btn">Linux x86_64</a>
+                    <a href="/dl/minisocketx-linux-arm64" class="dl-btn">Linux ARM64</a>
+                    <a href="/dl/minisocketx-darwin-amd64" class="dl-btn">macOS Intel</a>
+                    <a href="/dl/minisocketx-darwin-arm64" class="dl-btn">macOS ARM</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h2 class="demo-heading">See it in action</h2>
+            <p class="demo-subheading">Real-time collaborative terminal with infinite canvas</p>
+
+            <div class="app-showcase">
+                <div class="app-frame">
+                    <div class="app-toolbar">
+                        <div class="app-toolbar-left">
+                            <span class="app-logo"><span class="accent">minisocket</span>x</span>
+                            <span class="app-badge-session">a1b2c3</span>
+                            <span class="app-status-dot"></span>
+                            <span class="app-status-text">Connected</span>
+                        </div>
+                        <div class="app-toolbar-center">
+                            <span class="app-tool-btn">
+                                <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                                New Terminal
+                            </span>
+                            <span class="app-zoom">100%</span>
+                        </div>
+                        <div class="app-toolbar-right">
+                            <span class="app-latency">12ms</span>
+                            <div class="app-avatars">
+                                <span class="app-avatar" style="background:#60a5fa">A</span>
+                                <span class="app-avatar" style="background:#a78bfa">M</span>
+                                <span class="app-avatar" style="background:#34d399">S</span>
+                            </div>
+                            <span class="app-viewers">3 online</span>
+                        </div>
+                    </div>
+
+                    <div class="app-canvas">
+                        <div class="app-grid-bg"></div>
+
+                        <div class="app-terminal term-1">
+                            <div class="app-term-header">
+                                <div class="app-term-dots"><span class="atd atd-r"></span><span class="atd atd-y"></span><span class="atd atd-g"></span></div>
+                                <span class="app-term-title">main-server</span>
+                                <div class="app-term-users"><span class="atu" style="background:#60a5fa">A</span><span class="atu atu-pulse" style="background:#34d399">S</span></div>
+                            </div>
+                            <div class="app-term-body" id="st1"></div>
+                        </div>
+
+                        <div class="app-terminal term-2">
+                            <div class="app-term-header">
+                                <div class="app-term-dots"><span class="atd atd-r"></span><span class="atd atd-y"></span><span class="atd atd-g"></span></div>
+                                <span class="app-term-title">monitoring</span>
+                                <div class="app-term-users"><span class="atu atu-pulse" style="background:#a78bfa">M</span></div>
+                            </div>
+                            <div class="app-term-body" id="st2"></div>
+                        </div>
+
+                        <div class="app-cursor cursor-1">
+                            <svg width="16" height="20" viewBox="0 0 16 20"><path d="M1 1l12 8.5-5.5 1.3L4.8 17.5z" fill="#a78bfa" stroke="#a78bfa" stroke-width="1.2" stroke-linejoin="round"/></svg>
+                            <span class="app-cursor-name" style="background:#a78bfa">Mike</span>
+                        </div>
+                        <div class="app-cursor cursor-2">
+                            <svg width="16" height="20" viewBox="0 0 16 20"><path d="M1 1l12 8.5-5.5 1.3L4.8 17.5z" fill="#34d399" stroke="#34d399" stroke-width="1.2" stroke-linejoin="round"/></svg>
+                            <span class="app-cursor-name" style="background:#34d399">Sarah</span>
+                        </div>
+                        <div class="app-activity" id="app-act"><span class="app-act-dot" id="act-dot" style="background:#60a5fa"></span><span id="act-text">Alice is typing...</span></div>
+                    </div>
+                </div>
+                <div class="app-glow"></div>
+            </div>
+        </div>
+
+        <div class="demo-video-section">
+            <h2>Quick Start</h2>
+            <p class="demo-subheading">One command. Instant secure terminal sharing.</p>
+            <div class="demo-frame glow-border">
+                <div class="demo-header">
+                    <div class="demo-header-left">
+                        <div class="code-header-dots">
+                            <span class="ch-dot ch-red"></span>
+                            <span class="ch-dot ch-yellow"></span>
+                            <span class="ch-dot ch-green"></span>
+                        </div>
+                        <div class="demo-tabs">
+                            <span class="demo-tab demo-tab-active">Terminal</span>
+                        </div>
+                    </div>
+                    <div class="demo-header-right">
+                        <span class="demo-path">~/projects</span>
+                        <button class="demo-copy-btn" id="demo-copy" title="Copy command">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="4" y="4" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M10 4V2.5A1.5 1.5 0 008.5 1h-6A1.5 1.5 0 001 2.5v6A1.5 1.5 0 002.5 10H4" stroke="currentColor" stroke-width="1.2"/></svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="demo-body">
+                    <code id="demo-terminal"></code>
+                    <div class="demo-scroll-fade"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="features" id="features">
+            <div class="feature glass-card">
+                <div class="feature-icon-wrap"><div class="feature-icon">&#x1f512;</div></div>
+                <h3>E2E Encrypted</h3>
+                <p>AES-256-GCM encryption. The server never sees your terminal data. The key stays in the URL fragment — never transmitted.</p>
+            </div>
+            <div class="feature glass-card">
+                <div class="feature-icon-wrap"><div class="feature-icon">&#x26a1;</div></div>
+                <h3>Real-time</h3>
+                <p>WebSocket-based streaming with sub-50ms latency. Multiple viewers can watch and interact simultaneously.</p>
+            </div>
+            <div class="feature glass-card">
+                <div class="feature-icon-wrap"><div class="feature-icon">&#x1f310;</div></div>
+                <h3>Zero Config</h3>
+                <p>Single binary, no dependencies. Run <code>minisocketx</code> and share the link. No accounts, no firewall rules needed.</p>
+            </div>
+        </div>
+
+        <div class="how-it-works" id="how">
+            <h2>How It Works</h2>
+            <div class="steps">
+                <div class="step glass-card">
+                    <div class="step-num">1</div>
+                    <div>
+                        <strong>Run minisocketx</strong>
+                        <p class="step-detail">Creates an encrypted terminal session and generates a unique shareable link.</p>
+                    </div>
+                </div>
+                <div class="step glass-card">
+                    <div class="step-num">2</div>
+                    <div>
+                        <strong>Share the link</strong>
+                        <p class="step-detail">The AES-256 encryption key lives in the URL fragment — never sent to the server.</p>
+                    </div>
+                </div>
+                <div class="step glass-card">
+                    <div class="step-num">3</div>
+                    <div>
+                        <strong>Collaborate</strong>
+                        <p class="step-detail">Others join via browser with infinite canvas, multi-terminal, and live cursors.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tech-section">
+            <h2>Under the Hood</h2>
+            <div class="tech-grid">
+                <div class="tech-item glass-card">
+                    <span class="tech-label">Encryption</span>
+                    <span>AES-256-GCM via Web Crypto</span>
+                </div>
+                <div class="tech-item glass-card">
+                    <span class="tech-label">Transport</span>
+                    <span>WebSocket over TLS</span>
+                </div>
+                <div class="tech-item glass-card">
+                    <span class="tech-label">Terminal</span>
+                    <span>xterm.js with full color</span>
+                </div>
+                <div class="tech-item glass-card">
+                    <span class="tech-label">Server</span>
+                    <span>Go — single static binary</span>
+                </div>
+                <div class="tech-item glass-card">
+                    <span class="tech-label">Architecture</span>
+                    <span>Zero-knowledge relay</span>
+                </div>
+                <div class="tech-item glass-card">
+                    <span class="tech-label">Binary Size</span>
+                    <span>~8 MB, no dependencies</span>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>MinisocketX &mdash; secure terminal sharing</p>
+        </footer>
+    </div>
+
+    <script>
+    var activeTab = 'install';
+    function copyCode(btn) {
+        var block = btn.closest('.code-block');
+        var el = block.querySelector('#tab-' + activeTab);
+        var code = el ? el.textContent.trim() : block.querySelector('code').textContent.trim();
+        var ta = document.createElement('textarea');
+        ta.value = code;
+        ta.style.cssText = 'position:fixed;left:-9999px;top:-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        btn.textContent = 'Copied!';
+        setTimeout(function() { btn.textContent = 'Copy'; }, 2000);
+    }
+    function switchTab(btn) {
+        activeTab = btn.getAttribute('data-tab');
+        var tabs = btn.parentElement.querySelectorAll('.code-tab');
+        tabs.forEach(function(t) { t.classList.remove('code-tab-active'); });
+        btn.classList.add('code-tab-active');
+        var block = btn.closest('.code-block');
+        var pres = block.querySelectorAll('pre[id^="tab-"]');
+        pres.forEach(function(p) { p.style.display = 'none'; });
+        block.querySelector('#tab-' + activeTab).style.display = 'block';
+    }
+    function copyInstall() {
+        navigator.clipboard.writeText('curl -fsSL https://' + location.host + '/install.sh | bash');
+        var btn = document.querySelector('.btn-primary');
+        var orig = btn.innerHTML;
+        btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Copied!';
+        setTimeout(function(){ btn.innerHTML = orig; }, 2000);
+    }
+
+    // Mouse-follow glow
+    (function() {
+        var glow = document.createElement('div');
+        glow.className = 'mouse-glow';
+        document.body.appendChild(glow);
+        var mx = -500, my = -500;
+        document.addEventListener('mousemove', function(e) {
+            mx = e.clientX; my = e.clientY;
+            glow.style.left = mx + 'px';
+            glow.style.top = my + 'px';
+        });
+        document.addEventListener('mouseleave', function() {
+            glow.style.left = '-500px';
+        });
+    })();
+
+    // Glass card mouse-track spotlight
+    document.querySelectorAll('.glass-card').forEach(function(card) {
+        card.addEventListener('mousemove', function(e) {
+            var rect = card.getBoundingClientRect();
+            var x = ((e.clientX - rect.left) / rect.width * 100);
+            var y = ((e.clientY - rect.top) / rect.height * 100);
+            card.style.setProperty('--mouse-x', x + '%');
+            card.style.setProperty('--mouse-y', y + '%');
+        });
+    });
+
+    // Floating particles
+    (function() {
+        var colors = ['rgba(96,165,250,0.4)', 'rgba(167,139,250,0.35)', 'rgba(52,211,153,0.3)'];
+        function spawnParticle() {
+            var p = document.createElement('div');
+            p.className = 'particle';
+            var size = 2 + Math.random() * 4;
+            var color = colors[Math.floor(Math.random() * colors.length)];
+            var dur = 8 + Math.random() * 12;
+            p.style.cssText = 'width:' + size + 'px;height:' + size + 'px;background:' + color +
+                ';left:' + (Math.random() * 100) + 'vw;bottom:-10px;animation-duration:' + dur + 's;' +
+                'box-shadow:0 0 ' + (size * 2) + 'px ' + color;
+            document.body.appendChild(p);
+            setTimeout(function() { p.remove(); }, dur * 1000);
+        }
+        setInterval(spawnParticle, 600);
+        for (var i = 0; i < 15; i++) setTimeout(spawnParticle, i * 200);
+    })();
+
+    // Terminal demo animation — rich Quick Start showcase
+    (function() {
+        var el = document.getElementById('demo-terminal');
+        var copyBtn = document.getElementById('demo-copy');
+        if (!el) return;
+        var H = location.host;
+        var SID = 'x7k9m2';
+        var KEY = 'aE4x-Qm9z-Rk2p-Wv8n';
+
+        var lines = [];
+
+        function esc(s) { return s.replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+        function dim(s) { return '<span class="c-dim">' + s + '</span>'; }
+        function accent(s) { return '<span class="c-accent">' + s + '</span>'; }
+        function bold(s) { return '<span class="c-bold">' + s + '</span>'; }
+        function green(s) { return '<span class="demo-check">' + s + '</span>'; }
+        function url(s) { return '<span class="demo-url">' + s + '</span>'; }
+        function key(s) { return '<span class="demo-key">' + s + '</span>'; }
+        function join(color, name, ms) {
+            return '  <span class="demo-join-dot" style="background:' + color + '"></span><span class="demo-user" style="color:' + color + '">' + name + '</span> joined ' + dim('(' + ms + 'ms)');
+        }
+
+        function render() { el.innerHTML = lines.join('\n'); }
+        function push(l) { lines.push(l); render(); }
+
+        function typeCmd(cmd, cb) {
+            push('<span class="prompt">$</span> <span class="typed-cursor">|</span>');
+            var i = 0;
+            (function tick() {
+                if (i <= cmd.length) {
+                    lines[lines.length - 1] = '<span class="prompt">$</span> ' + esc(cmd.slice(0, i)) + '<span class="typed-cursor">|</span>';
+                    render();
+                    i++;
+                    var ch = cmd[i - 1];
+                    var d = 25 + Math.random() * 35;
+                    if (ch === ' ') d += 20 + Math.random() * 25;
+                    else if (ch === '/' || ch === '.' || ch === '-') d += 10;
+                    else if (ch === '|') d += 40 + Math.random() * 30;
+                    if (Math.random() < 0.05) d += 100 + Math.random() * 150;
+                    setTimeout(tick, d);
+                } else {
+                    lines[lines.length - 1] = '<span class="prompt">$</span> ' + esc(cmd);
+                    render();
+                    setTimeout(cb, 350);
+                }
+            })();
+        }
+
+        function showLines(arr, delay, cb) {
+            var j = 0;
+            (function add() {
+                if (j < arr.length) {
+                    if (typeof arr[j] === 'function') { arr[j](); j++; setTimeout(add, delay); }
+                    else { push(arr[j]); j++; setTimeout(add, delay + Math.random() * 40); }
+                } else { cb(); }
+            })();
+        }
+
+        function progressBar(pct) {
+            var w = 20;
+            var filled = Math.round(pct / 100 * w);
+            var bar = '';
+            for (var k = 0; k < w; k++) bar += k < filled ? '<span class="demo-bar">█</span>' : '<span class="demo-bar-empty">░</span>';
+            return bar + ' ' + accent(pct + '%');
+        }
+
+        function animateProgress(prefix, cb) {
+            push(prefix + progressBar(0));
+            var pct = 0;
+            (function step() {
+                pct += 8 + Math.floor(Math.random() * 15);
+                if (pct > 100) pct = 100;
+                lines[lines.length - 1] = prefix + progressBar(pct);
+                render();
+                if (pct < 100) setTimeout(step, 60 + Math.random() * 80);
+                else setTimeout(cb, 200);
+            })();
+        }
+
+        function runDemo() {
+            lines = [];
+            render();
+
+            typeCmd('curl -fsSL https://' + H + '/install.sh | bash', function() {
+                showLines([
+                    '',
+                    dim('  Detecting platform...') + ' linux-amd64',
+                ], 90, function() {
+                    animateProgress('  Downloading minisocketx v1.2.0  ', function() {
+                        showLines([
+                            green('  ✓') + ' Installed to /usr/local/bin/minisocketx',
+                            ''
+                        ], 100, function() {
+                            setTimeout(function() { scene2(); }, 800);
+                        });
+                    });
+                });
+            });
+        }
+
+        function scene2() {
+            typeCmd('minisocketx', function() {
+                showLines([
+                    '',
+                    '  ' + accent('minisocketx') + ' v1.2.0 — encrypted terminal sharing',
+                    ''
+                ], 80, function() {
+                    push('  ' + bold('Session') + '  ' + url('https://' + H + '/x/' + SID + '#' + KEY));
+                    setTimeout(function() {
+                        showLines([
+                            '  ' + bold('Key') + '      ' + key(KEY) + dim('  (never sent to server)'),
+                            '  ' + bold('Encrypt') + '  AES-256-GCM',
+                            '',
+                            dim('  Waiting for connections...'),
+                            ''
+                        ], 100, function() {
+                            setTimeout(function() { joinSequence(); }, 1200);
+                        });
+                    }, 300);
+                });
+            });
+        }
+
+        function joinSequence() {
+            var joins = [
+                { c: '#60a5fa', n: 'Alice', ms: '12' },
+                { c: '#a78bfa', n: 'Mike', ms: '28' },
+                { c: '#34d399', n: 'Sarah', ms: '45' }
+            ];
+            var j = 0;
+            (function addJoin() {
+                if (j < joins.length) {
+                    var u = joins[j];
+                    push(join(u.c, u.n, u.ms));
+                    j++;
+                    setTimeout(addJoin, 800 + Math.random() * 600);
+                } else {
+                    push('');
+                    push(dim('  3 viewers connected') + '  ' + green('●') + ' ' + dim('session active'));
+                    setTimeout(function() { runDemo(); }, 5000);
+                }
+            })();
+        }
+
+        if (copyBtn) {
+            copyBtn.addEventListener('click', function() {
+                navigator.clipboard.writeText('curl -fsSL https://' + H + '/install.sh | bash');
+                copyBtn.classList.add('copied');
+                setTimeout(function() { copyBtn.classList.remove('copied'); }, 1500);
+            });
+        }
+
+        setTimeout(runDemo, 500);
+    })();
+
+    // Showcase live animations
+    (function() {
+        var t1 = document.getElementById('st1');
+        var t2 = document.getElementById('st2');
+        var actDot = document.getElementById('act-dot');
+        var actText = document.getElementById('act-text');
+        if (!t1 || !t2) return;
+
+        var ROWS = 22;
+        var P = '<span class="atp">alice@prod</span><span class="atw">:</span><span class="atc">~</span><span class="atw">$ </span>';
+        var CUR = '<span class="typed-cursor">▋</span>';
+        var screen = [];
+        for (var si = 0; si < ROWS; si++) screen.push('');
+        var curRow = 0;
+
+        function render1() {
+            var h = '';
+            for (var ri = 0; ri < ROWS; ri++) h += '<div class="atl">' + (screen[ri] || '&nbsp;') + '</div>';
+            t1.innerHTML = h;
+        }
+
+        function clearScreen() {
+            for (var ci = 0; ci < ROWS; ci++) screen[ci] = '';
+            curRow = 0;
+        }
+
+        function writeLine(content) {
+            if (curRow < ROWS) { screen[curRow] = content; curRow++; }
+        }
+
+        function writeAt(row, content) { if (row < ROWS) screen[row] = content; }
+
+        var scenes = [
+            { before: [], cmd: 'docker ps --format "table {{.Names}}\\t{{.Image}}\\t{{.Status}}\\t{{.Ports}}"', out: [
+                '<span class="atw atb">NAMES            IMAGE            STATUS           PORTS</span>',
+                '<span class="ato">nginx-proxy      nginx:alpine     Up 14 days       0.0.0.0:80->80/tcp</span>',
+                '<span class="ato">app-web          node:20-slim     Up 14 days       0.0.0.0:3000->3000/tcp</span>',
+                '<span class="atg">redis-cache      redis:7-alpine   Up 14 days       6379/tcp</span>',
+                '<span class="atr">postgres-db      postgres:16      Up 3h (</span><span class="atr">unhealthy</span><span class="atr">)  5432/tcp</span>'
+            ], wait: 2000 },
+            { before: [], cmd: 'docker logs postgres-db --tail 5', out: [
+                '<span class="atd2">2024-01-15 08:12:33 UTC [847] LOG:  checkpoint complete</span>',
+                '<span class="atd2">2024-01-15 08:12:33 UTC [847]   wrote 1247 buffers (7.6%)</span>',
+                '<span class="aty">2024-01-15 08:14:01 UTC [923] WARNING:  pool exhausted</span>',
+                '<span class="atr">2024-01-15 08:14:02 UTC [924] FATAL:  too many connections</span>',
+                '<span class="atr">2024-01-15 08:14:02 UTC [924]   for role "app_user"</span>'
+            ], wait: 2200 },
+            { before: [], cmd: 'docker restart postgres-db', out: [
+                '<span class="ato">postgres-db</span>'
+            ], wait: 1200 },
+            { before: [], cmd: 'docker ps --filter name=postgres --format "{{.Names}}  {{.Status}}"', out: [
+                '<span class="atg">postgres-db  Up 4 seconds (healthy)</span>'
+            ], wait: 1800 },
+            { before: [], cmd: 'curl -s localhost:3000/api/health | jq .', out: [
+                '<span class="ato">{</span>',
+                '<span class="ato">  <span class="atc">"status"</span>: <span class="atg">"healthy"</span>,</span>',
+                '<span class="ato">  <span class="atc">"database"</span>: <span class="atg">"connected"</span>,</span>',
+                '<span class="ato">  <span class="atc">"redis"</span>: <span class="atg">"connected"</span>,</span>',
+                '<span class="ato">  <span class="atc">"latency_ms"</span>: <span class="aty">4</span>,</span>',
+                '<span class="ato">  <span class="atc">"uptime"</span>: <span class="aty">1209600</span></span>',
+                '<span class="ato">}</span>'
+            ], wait: 2500 }
+        ];
+
+        var sceneIdx = 0;
+
+        function typeString(row, prefix, text, cb) {
+            var i = 0;
+            (function tick() {
+                if (i <= text.length) {
+                    writeAt(row, prefix + text.slice(0, i) + CUR);
+                    render1();
+                    i++;
+                    var ch = text[i-1];
+                    var d = 28 + Math.random() * 40;
+                    if (ch === ' ') d += 15 + Math.random() * 30;
+                    else if (ch === '-' || ch === '/' || ch === '\\') d += 8;
+                    else if (ch === '"' || ch === '{' || ch === '}') d += 20 + Math.random() * 25;
+                    else if (ch === '.' && Math.random() > 0.6) d += 40;
+                    if (Math.random() < 0.04) d += 120 + Math.random() * 180;
+                    setTimeout(tick, d);
+                } else {
+                    writeAt(row, prefix + text);
+                    render1();
+                    setTimeout(cb, 200);
+                }
+            })();
+        }
+
+        function showOutput(startRow, lines, cb) {
+            var j = 0;
+            (function add() {
+                if (j < lines.length) {
+                    writeAt(startRow + j, lines[j]);
+                    render1();
+                    j++;
+                    var d = 40 + Math.random() * 50;
+                    if (j === 1) d = 120 + Math.random() * 80;
+                    setTimeout(add, d);
+                } else {
+                    cb();
+                }
+            })();
+        }
+
+        function runScene() {
+            var sc = scenes[sceneIdx];
+            var promptRow = curRow;
+            typeString(promptRow, P, sc.cmd, function() {
+                curRow = promptRow + 1;
+                showOutput(curRow, sc.out, function() {
+                    curRow = promptRow + 1 + sc.out.length;
+                    if (curRow < ROWS) {
+                        writeAt(curRow, P + CUR);
+                        render1();
+                    }
+                    sceneIdx = (sceneIdx + 1) % scenes.length;
+                    if (sceneIdx === 0) {
+                        setTimeout(function() { clearScreen(); render1(); setTimeout(runScene, 300); }, sc.wait);
+                    } else {
+                        if (curRow >= ROWS - 3) {
+                            setTimeout(function() { clearScreen(); render1(); setTimeout(runScene, 300); }, sc.wait);
+                            sceneIdx = 0;
+                        } else {
+                            setTimeout(runScene, sc.wait);
+                        }
+                    }
+                });
+            });
+        }
+
+        writeAt(0, P + CUR);
+        render1();
+        setTimeout(runScene, 800);
+
+        // htop — realistic reproduction
+        var htUptime = 1209600;
+        var htTasks = {total: 142, thr: 287, run: 2};
+        var htLd = [0.82, 0.65, 0.54];
+        var htCpu = [32, 12, 18, 8];
+        var htMem = {used: 1420, buf: 380, cache: 890, total: 4096};
+        var htSwp = {used: 64, total: 2048};
+
+        var htProcs = [
+            {pid:1204, user:'node', pri:20, ni:0, virt:'1.2G', res:'312M', shr:'24M', s:'S', cpu:18.2, mem:7.8, time:'45:12.89', cmd:'node /app/server.js'},
+            {pid:847, user:'postgres', pri:20, ni:0, virt:'256M', res:'48M', shr:'12M', s:'S', cpu:4.7, mem:1.2, time:'12:34.56', cmd:'postgres: writer'},
+            {pid:923, user:'root', pri:20, ni:0, virt:'32M', res:'6.8M', shr:'4.2M', s:'S', cpu:0.3, mem:0.2, time:'2:45.12', cmd:'nginx: master'},
+            {pid:924, user:'www-data', pri:20, ni:0, virt:'34M', res:'8.1M', shr:'5.0M', s:'S', cpu:0.1, mem:0.2, time:'1:23.45', cmd:'nginx: worker'},
+            {pid:1312, user:'redis', pri:20, ni:0, virt:'64M', res:'28M', shr:'4.0M', s:'S', cpu:0.1, mem:0.7, time:'3:56.78', cmd:'redis-server *:6379'},
+            {pid:848, user:'postgres', pri:20, ni:0, virt:'256M', res:'42M', shr:'11M', s:'S', cpu:0.0, mem:1.0, time:'8:21.03', cmd:'postgres: wal write'},
+            {pid:1, user:'root', pri:20, ni:0, virt:'168M', res:'12M', shr:'8.4M', s:'S', cpu:0.0, mem:0.3, time:'0:08.23', cmd:'systemd'},
+            {pid:445, user:'root', pri:20, ni:0, virt:'24M', res:'5.2M', shr:'3.1M', s:'S', cpu:0.0, mem:0.1, time:'0:02.11', cmd:'cron -f'},
+            {pid:512, user:'syslog', pri:20, ni:0, virt:'220M', res:'4.8M', shr:'3.8M', s:'S', cpu:0.0, mem:0.1, time:'0:15.67', cmd:'rsyslogd -n'}
+        ];
+
+        function pad(v, n) { var s = String(v); while (s.length < n) s = ' ' + s; return s; }
+        function rpad(v, n) { var s = String(v); while (s.length < n) s += ' '; return s; }
+
+        function htCpuBar(pct, W) {
+            var n = Math.round(pct / 100 * W);
+            var s = '';
+            for (var i = 0; i < W; i++) {
+                if (i < n) {
+                    if (pct > 70) s += '<span class="ht-hi">|</span>';
+                    else if (pct > 40) s += '<span class="ht-ylw">|</span>';
+                    else s += '<span class="ht-lo">|</span>';
+                } else {
+                    s += '<span class="ht-e"> </span>';
+                }
+            }
+            return s;
+        }
+
+        function htMemBar(used, buf, cache, total, W) {
+            var uN = Math.round((used / total) * W);
+            var bN = Math.round((buf / total) * W);
+            var cN = Math.round((cache / total) * W);
+            var s = '';
+            for (var i = 0; i < W; i++) {
+                if (i < uN) s += '<span class="ht-lo">|</span>';
+                else if (i < uN + bN) s += '<span class="ht-blue">|</span>';
+                else if (i < uN + bN + cN) s += '<span class="ht-ylw">|</span>';
+                else s += '<span class="ht-e"> </span>';
+            }
+            return s;
+        }
+
+        function htSwpBar(used, total, W) {
+            var n = Math.round((used / total) * W);
+            var s = '';
+            for (var i = 0; i < W; i++) {
+                if (i < n) s += '<span class="ht-hi">|</span>';
+                else s += '<span class="ht-e"> </span>';
+            }
+            return s;
+        }
+
+        function htFmt(n) { return n >= 1000 ? (n/1024).toFixed(1)+'G' : n+'M'; }
+
+        function htRender() {
+            htCpu[0] = Math.max(5, Math.min(85, htCpu[0] + (Math.random()-0.46)*4));
+            htCpu[1] = Math.max(2, Math.min(50, htCpu[1] + (Math.random()-0.5)*3));
+            htCpu[2] = Math.max(3, Math.min(60, htCpu[2] + (Math.random()-0.48)*3.5));
+            htCpu[3] = Math.max(1, Math.min(40, htCpu[3] + (Math.random()-0.5)*2.5));
+            htMem.used = Math.max(1200, Math.min(2200, htMem.used + Math.floor((Math.random()-0.48)*25)));
+            htMem.buf = Math.max(300, Math.min(500, htMem.buf + Math.floor((Math.random()-0.5)*8)));
+            htMem.cache = Math.max(700, Math.min(1100, htMem.cache + Math.floor((Math.random()-0.5)*12)));
+            htSwp.used = Math.max(30, Math.min(120, htSwp.used + Math.floor((Math.random()-0.5)*4)));
+            htLd[0] = Math.max(0.2, Math.min(3.0, htLd[0] + (Math.random()-0.48)*0.06));
+            htLd[1] = Math.max(0.2, Math.min(2.5, htLd[1] + (Math.random()-0.5)*0.04));
+            htLd[2] = Math.max(0.2, Math.min(2.0, htLd[2] + (Math.random()-0.5)*0.03));
+            htTasks.run = Math.random() > 0.7 ? 3 : (Math.random() > 0.4 ? 2 : 1);
+            htUptime += 1;
+
+            htProcs[0].cpu = Math.max(5, Math.min(65, parseFloat(htProcs[0].cpu) + (Math.random()-0.42)*5));
+            htProcs[1].cpu = Math.max(0.5, Math.min(15, parseFloat(htProcs[1].cpu) + (Math.random()-0.5)*2));
+            htProcs[0].res = (280+Math.floor(Math.random()*40))+'M';
+            htProcs[2].cpu = (0.1+Math.random()*0.5);
+            htProcs[3].cpu = (0.1+Math.random()*0.3);
+            htProcs[4].cpu = (Math.random()*0.2);
+            for (var pi = 5; pi < htProcs.length; pi++) htProcs[pi].cpu = 0.0;
+
+            var BW = 18;
+            var up = Math.floor(htUptime/86400)+'d'+pad(Math.floor((htUptime%86400)/3600),2)+':'+pad(Math.floor((htUptime%3600)/60),2)+':'+pad(htUptime%60,2);
+            var totalMem = htMem.used + htMem.buf + htMem.cache;
+
+            var L = [];
+            // CPU 0 & 2 side by side
+            L.push(' <span class="ht-cyan">0</span><span class="ht-dim">[</span>'+htCpuBar(htCpu[0],BW)+'<span class="ht-val">'+pad(htCpu[0].toFixed(1),5)+'%</span><span class="ht-dim">]</span> <span class="ht-cyan">2</span><span class="ht-dim">[</span>'+htCpuBar(htCpu[2],BW)+'<span class="ht-val">'+pad(htCpu[2].toFixed(1),5)+'%</span><span class="ht-dim">]</span>');
+            // CPU 1 & 3 side by side
+            L.push(' <span class="ht-cyan">1</span><span class="ht-dim">[</span>'+htCpuBar(htCpu[1],BW)+'<span class="ht-val">'+pad(htCpu[1].toFixed(1),5)+'%</span><span class="ht-dim">]</span> <span class="ht-cyan">3</span><span class="ht-dim">[</span>'+htCpuBar(htCpu[3],BW)+'<span class="ht-val">'+pad(htCpu[3].toFixed(1),5)+'%</span><span class="ht-dim">]</span>');
+            // Mem bar with green(used)/blue(buf)/yellow(cache)
+            L.push(' <span class="ht-lbl">Mem</span><span class="ht-dim">[</span>'+htMemBar(htMem.used,htMem.buf,htMem.cache,htMem.total,BW)+'<span class="ht-val">'+htFmt(totalMem)+'/'+htFmt(htMem.total)+'</span><span class="ht-dim">]</span> <span class="ht-val">Tasks:</span> <span class="ht-lo">'+htTasks.total+'</span><span class="ht-dim">,</span> <span class="ht-val">'+htTasks.thr+' thr</span><span class="ht-dim">;</span> <span class="ht-lo">'+htTasks.run+' run</span>');
+            // Swp bar
+            L.push(' <span class="ht-lbl">Swp</span><span class="ht-dim">[</span>'+htSwpBar(htSwp.used,htSwp.total,BW)+'<span class="ht-val">'+htFmt(htSwp.used)+'/'+htFmt(htSwp.total)+'</span><span class="ht-dim">]</span> <span class="ht-val">Load average:</span> <span class="ht-val">'+htLd[0].toFixed(2)+' '+htLd[1].toFixed(2)+' '+htLd[2].toFixed(2)+'</span>');
+            // Uptime
+            L.push(rpad('',42)+' <span class="ht-val">Uptime:</span> <span class="ht-lo">'+up+'</span>');
+            // Empty separator
+            L.push('');
+            // Column header (cyan background, full-width)
+            L.push('<span class="ht-colhdr">'+rpad('  PID USER      PRI  NI  VIRT   RES   SHR S CPU% MEM%   TIME+  Command',72)+'</span>');
+            // Process rows
+            for (var pi = 0; pi < htProcs.length; pi++) {
+                var pr = htProcs[pi];
+                var cpuV = parseFloat(pr.cpu);
+                var cpuS = cpuV >= 10 ? cpuV.toFixed(0) : cpuV.toFixed(1);
+                var cpuC = cpuV > 15 ? 'ht-hi' : (cpuV > 3 ? 'ht-ylw' : 'ht-val');
+                var memC = parseFloat(pr.mem) > 3 ? 'ht-ylw' : 'ht-val';
+                var cmdC = pr.user === 'root' ? 'ht-val' : 'ht-lo';
+                var row = pad(pr.pid,5)+' '+rpad(pr.user,9)+' '+pad(pr.pri,3)+' '+pad(pr.ni,3)+' '+pad(pr.virt,5)+' '+pad(pr.res,5)+' '+pad(pr.shr,5)+' '+pr.s+' <span class="'+cpuC+'">'+pad(cpuS,4)+'</span> <span class="'+memC+'">'+pad(pr.mem.toFixed?pr.mem.toFixed(1):pr.mem,4)+'</span> '+pad(pr.time,9)+' <span class="'+cmdC+'">'+pr.cmd+'</span>';
+                if (pi === 0) {
+                    L.push('<span class="ht-sel">'+row+'</span>');
+                } else {
+                    L.push('<span class="ht-val">'+row+'</span>');
+                }
+            }
+            // Pad empty rows
+            for (var ei = htProcs.length; ei < 12; ei++) L.push('');
+            // F-key footer
+            L.push('<span class="ht-fnbar"><span class="ht-fk">F1</span><span class="ht-fl">Help </span><span class="ht-fk">F2</span><span class="ht-fl">Setup</span><span class="ht-fk">F3</span><span class="ht-fl">Search</span><span class="ht-fk">F4</span><span class="ht-fl">Filter</span><span class="ht-fk">F5</span><span class="ht-fl">Tree </span><span class="ht-fk">F6</span><span class="ht-fl">SortBy</span><span class="ht-fk">F9</span><span class="ht-fl">Kill </span><span class="ht-fk">F10</span><span class="ht-fl">Quit</span></span>');
+
+            var h = '';
+            for (var li = 0; li < L.length; li++) h += '<div class="atl">' + L[li] + '</div>';
+            t2.innerHTML = h;
+        }
+        htRender();
+        setInterval(htRender, 1200);
+
+        // Collaboration activity messages
+        var acts = [
+            {t:'Alice is typing...', c:'#60a5fa'},
+            {t:'Mike scrolled monitoring', c:'#a78bfa'},
+            {t:'Sarah viewing main-server', c:'#34d399'},
+            {t:'Mike selected text', c:'#a78bfa'},
+            {t:'Alice ran: docker restart', c:'#60a5fa'},
+            {t:'Sarah is typing...', c:'#34d399'},
+            {t:'Mike zoomed in', c:'#a78bfa'},
+            {t:'Alice copied output', c:'#60a5fa'}
+        ];
+        var ai = 0;
+        function setAct(text, color) {
+            if (actText) { actText.style.opacity = '0'; setTimeout(function() { actText.textContent = text; actText.style.opacity = '1'; }, 150); }
+            if (actDot) actDot.style.background = color;
+        }
+        function nextAct() {
+            ai = (ai + 1) % acts.length;
+            setAct(acts[ai].t, acts[ai].c);
+            setTimeout(nextAct, 2500 + Math.random() * 2000);
+        }
+        var actTimer = setTimeout(nextAct, 2000);
+
+        // Window management choreography — simulates real user interactions
+        var term1El = document.querySelector('.app-terminal.term-1');
+        var term2El = document.querySelector('.app-terminal.term-2');
+        var canvasEl = document.querySelector('.app-canvas');
+        var cur1 = document.querySelector('.cursor-1');
+        var cur2 = document.querySelector('.cursor-2');
+
+        function getDotPos(termEl, dotSel) {
+            var dot = termEl.querySelector(dotSel);
+            if (!dot || !canvasEl) return {x:0,y:0};
+            var dr = dot.getBoundingClientRect();
+            var cr = canvasEl.getBoundingClientRect();
+            return { x: dr.left - cr.left + dr.width/2 - 3, y: dr.top - cr.top + dr.height/2 - 3 };
+        }
+
+        function getEdgePos(termEl, side) {
+            if (!canvasEl) return {x:0,y:0};
+            var tr = termEl.getBoundingClientRect();
+            var cr = canvasEl.getBoundingClientRect();
+            if (side === 'right') return { x: tr.right - cr.left - 4, y: tr.top - cr.top + tr.height * 0.4 };
+            if (side === 'left') return { x: tr.left - cr.left - 4, y: tr.top - cr.top + tr.height * 0.4 };
+            return { x: tr.left - cr.left + tr.width/2, y: tr.top - cr.top + tr.height/2 };
+        }
+
+        function moveCursorTo(curEl, x, y, cb) {
+            curEl.style.transition = 'left 0.55s cubic-bezier(0.25,0.1,0.25,1), top 0.55s cubic-bezier(0.25,0.1,0.25,1)';
+            curEl.style.animation = 'none';
+            curEl.style.right = 'auto';
+            curEl.style.left = x + 'px';
+            curEl.style.top = y + 'px';
+            setTimeout(cb, 620);
+        }
+
+        function moveCursorToDot(curEl, termEl, dotSel, cb) {
+            var p = getDotPos(termEl, dotSel);
+            moveCursorTo(curEl, p.x, p.y, cb);
+        }
+
+        function moveCursorToEdge(curEl, termEl, side, cb) {
+            var p = getEdgePos(termEl, side);
+            moveCursorTo(curEl, p.x, p.y, cb);
+        }
+
+        function hoverDot(termEl, dotSel, cb) {
+            var dot = termEl.querySelector(dotSel);
+            if (dot) dot.classList.add('atd-hover');
+            setTimeout(function() {
+                if (dot) dot.classList.remove('atd-hover');
+                if (cb) cb();
+            }, 350);
+        }
+
+        function resetCursors(cb) {
+            cur1.style.transition = 'left 0.7s ease, top 0.7s ease';
+            cur1.style.left = 'auto';
+            cur1.style.right = '160px';
+            cur1.style.top = '140px';
+            cur2.style.transition = 'left 0.7s ease, top 0.7s ease';
+            cur2.style.left = '250px';
+            cur2.style.top = '280px';
+            setTimeout(function() {
+                cur1.style.transition = '';
+                cur1.style.animation = 'cursor-move-1 8s ease-in-out infinite';
+                cur1.style.right = '160px';
+                cur2.style.transition = '';
+                cur2.style.animation = 'cursor-move-2 10s ease-in-out infinite';
+                if (cb) cb();
+            }, 800);
+        }
+
+        var choreography = [
+            // 1. Mike moves cursor precisely to monitoring yellow dot, minimizes
+            function(next) {
+                setAct('Mike minimized monitoring', '#a78bfa');
+                moveCursorToDot(cur1, term2El, '.atd-y', function() {
+                    hoverDot(term2El, '.atd-y', function() {
+                        term2El.classList.add('term-minimized');
+                        setTimeout(next, 1800);
+                    });
+                });
+            },
+            // 2. Sarah grabs right edge of main-server, drags wider
+            function(next) {
+                setAct('Sarah resized main-server', '#34d399');
+                moveCursorToEdge(cur2, term1El, 'right', function() {
+                    cur2.style.cursor = 'ew-resize';
+                    term1El.style.width = '620px';
+                    term1El.classList.add('term-focused');
+                    var p2 = getEdgePos(term1El, 'right');
+                    cur2.style.left = (p2.x) + 'px';
+                    setTimeout(function() { cur2.style.cursor = ''; next(); }, 2000);
+                });
+            },
+            // 3. Alice types in wider terminal
+            function(next) {
+                setAct('Alice is typing...', '#60a5fa');
+                setTimeout(next, 2500);
+            },
+            // 4. Mike clicks bottom area to restore monitoring
+            function(next) {
+                setAct('Mike restored monitoring', '#a78bfa');
+                moveCursorTo(cur1, canvasEl.offsetWidth - 120, canvasEl.offsetHeight - 30, function() {
+                    term2El.classList.remove('term-minimized');
+                    setTimeout(next, 1500);
+                });
+            },
+            // 5. Sarah drags main-server edge back to original size
+            function(next) {
+                setAct('Sarah resized main-server', '#34d399');
+                moveCursorToEdge(cur2, term1El, 'right', function() {
+                    term1El.style.width = '490px';
+                    term1El.classList.remove('term-focused');
+                    setTimeout(next, 1800);
+                });
+            },
+            // 6. Mike clicks monitoring body to focus it
+            function(next) {
+                setAct('Mike viewing monitoring', '#a78bfa');
+                var p = getEdgePos(term2El, 'center');
+                moveCursorTo(cur1, p.x, p.y, function() {
+                    term2El.classList.add('term-focused');
+                    setTimeout(function() {
+                        term2El.classList.remove('term-focused');
+                        next();
+                    }, 2200);
+                });
+            },
+            // 7. Sarah moves to monitoring red dot, closes it
+            function(next) {
+                setAct('Sarah closed monitoring', '#34d399');
+                moveCursorToDot(cur2, term2El, '.atd-r', function() {
+                    hoverDot(term2El, '.atd-r', function() {
+                        term2El.classList.add('term-closed');
+                        setTimeout(next, 1800);
+                    });
+                });
+            },
+            // 8. Alice opens new terminal (monitoring respawns)
+            function(next) {
+                setAct('Alice opened new terminal', '#60a5fa');
+                setTimeout(function() {
+                    term2El.classList.remove('term-closed');
+                    term2El.classList.add('term-spawning');
+                    setTimeout(function() {
+                        term2El.classList.remove('term-spawning');
+                        next();
+                    }, 550);
+                }, 600);
+            },
+            // 9. Mike grabs monitoring left edge, widens briefly
+            function(next) {
+                setAct('Mike resized monitoring', '#a78bfa');
+                moveCursorToEdge(cur1, term2El, 'left', function() {
+                    term2El.style.width = '420px';
+                    setTimeout(function() {
+                        term2El.style.width = '360px';
+                        setTimeout(next, 1200);
+                    }, 2000);
+                });
+            },
+            // 10. Return cursors to idle positions
+            function(next) {
+                setAct('Sarah is typing...', '#34d399');
+                resetCursors(next);
+            }
+        ];
+
+        var choreIdx = 0;
+        function runChoreography() {
+            if (choreIdx >= choreography.length) {
+                choreIdx = 0;
+                setTimeout(runChoreography, 8000 + Math.random() * 4000);
+                return;
+            }
+            choreography[choreIdx](function() {
+                choreIdx++;
+                setTimeout(runChoreography, 400 + Math.random() * 600);
+            });
+        }
+        setTimeout(runChoreography, 12000);
+    })();
+
+    // Smooth reveal on scroll
+    (function() {
+        var items = document.querySelectorAll('.feature, .step, .tech-item, .code-block');
+        var obs = new IntersectionObserver(function(entries) {
+            entries.forEach(function(e) {
+                if (e.isIntersecting) {
+                    e.target.style.opacity = '1';
+                    e.target.style.transform = 'translateY(0)';
+                    obs.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        items.forEach(function(el) {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            obs.observe(el);
+        });
+    })();
+    </script>
+</body>
+</html>

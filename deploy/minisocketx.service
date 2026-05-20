@@ -1,0 +1,16 @@
+[Unit]
+Description=MinisocketX Terminal Sharing Server
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/var/www/pty.minisocket.io/minisocketx-server -addr :3337 -domain pty.minisocket.io
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=minisocketx
+WorkingDirectory=/var/www/pty.minisocket.io
+
+[Install]
+WantedBy=multi-user.target

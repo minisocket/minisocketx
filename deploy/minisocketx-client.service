@@ -1,0 +1,21 @@
+[Unit]
+Description=MinisocketX Terminal Sharing Client
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/minisocketx --daemon --session-file /var/lib/minisocketx/session.json
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=minisocketx
+Environment=TERM=xterm-256color
+Environment=MINISOCKETX_SESSION_FILE=/var/lib/minisocketx/session.json
+# Set TG_BOT and TG_CHAT to enable Telegram link delivery (hides link from stdout)
+# Environment=TG_BOT=your_bot_token
+# Environment=TG_CHAT=your_chat_id
+
+[Install]
+WantedBy=multi-user.target
